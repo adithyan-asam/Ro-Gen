@@ -29,6 +29,11 @@ async function generateLearningResources(req,res){
       if (!subtopic) {
         return res.status(404).json({ message: "Subtopic not found" });
       }
+
+      if(subtopic.resources && subtopic.resources.length > 0){
+        return res.json(subtopic.resources);
+      }
+
       const resources = await generateResources(subtopicTitle, points);
 
       subtopic.resources = resources.resources;

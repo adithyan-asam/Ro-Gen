@@ -127,7 +127,7 @@ Example output:
     }
   }
 }
-Make sure every key is lowercase like subtopics, topic, time, week 1, week 2, etc.`
+Make sure every key is lowercase like subtopics, topic, time, week 1, week 2, etc.but all values like topic names, subtopic titles, and points must use Title Case — where each word starts with a capital letter.`
     },
     safetySettings: [
       { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },

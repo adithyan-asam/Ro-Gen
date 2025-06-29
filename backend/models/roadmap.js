@@ -24,7 +24,8 @@ const SubtopicSchema = new mongoose.Schema({
   time: { type: String, required: true },
   points: [PointSchema],
   quiz: {
-    questions: [QuestionSchema]
+    questions: [QuestionSchema],
+    score: { type: Number, default: null }
   },
   resources: [ResourceSchema]
 }, { _id: false });
@@ -35,7 +36,8 @@ const WeekSchema = new mongoose.Schema({
 }, { _id: false });
 
 const LevelSchema = new mongoose.Schema({
-  weeks: [WeekSchema]
+  weeks: [WeekSchema],
+  lockIndex: { type: Number, default: 0 }
 }, { _id: false });
 
 const RoadmapSchema = new mongoose.Schema({

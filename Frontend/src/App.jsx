@@ -5,6 +5,8 @@ import Home from './components/Home';
 import Login from './components/secure/Login';
 import Signup from './components/secure/Signup';
 import Search from './components/Search';
+import RoadmapTabs from './components/roadmap/RoadmapTabs';
+import Quiz from './components/quiz/Quiz';
 // import Navbar from './components/Navbar';
 
 function App() {
@@ -22,7 +24,23 @@ function App() {
                             <ProtectedRoute>
                                 <Search />
                             </ProtectedRoute>
-                        } 
+                        }
+                    />
+                    <Route
+                        path="/roadmap/:level/:week"
+                        element={
+                            <ProtectedRoute>
+                                <RoadmapTabs />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/quiz"
+                        element={
+                            <ProtectedRoute>
+                                <Quiz />
+                            </ProtectedRoute>
+                        }
                     />
                 </Routes>
             </Router>

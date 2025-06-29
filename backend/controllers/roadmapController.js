@@ -6,6 +6,30 @@ async function generateRoadmap(req, res) {
         const { course, time } = req.body;
         const userId = req.user.id;
 
+        const existing = await Roadmap.findOne({userId, course, totalTime: time});
+        if (existing) {
+          const result = {};
+          let counter = 1;
+          ["beginner", "intermediate", "advanced"].forEach((level) => {
+            if (existing[level]) {
+              result[level] = {};
+              existing[level].weeks.forEach((week, index) => {
+                const weekKey = `week ${counter}`;
+                result[level][weekKey] = {
+                  topic: week.topic,
+                  subtopics: week.subtopics.map((subtopic) => ({
+                    subtopic: subtopic.subtopic,
+                    time: subtopic.time,
+                    points: subtopic.points.map((point) => point.type),
+                  })),
+                };
+                counter++;
+              });
+            }
+          });
+          return res.json(result);
+        }
+
         // Generate roadmap from AI
         const generatedRoadmap = await createRoadmap(course, time);
 
@@ -28,7 +52,8 @@ async function generateRoadmap(req, res) {
                             quiz: { questions: [] },
                             resources: []
                         }))
-                    }))
+                    })),
+                    lockIndex: level==='beginner' ? 1 : 0
                 };
             }
         }

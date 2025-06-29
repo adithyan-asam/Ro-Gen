@@ -1,172 +1,318 @@
-.roadmap-result {
-  margin-top: 2rem;
-  padding: 2rem;
-  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  max-width: 1000px;
-  width: 90%;
-  border: 1px solid rgba(255,255,255,0.2);
-  
+.roadmap-result{
+  padding: 50px 200px;
+  background: #080416;
+  min-height: 100vh;
 }
 
-.roadmap-title {
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 2rem;
-  font-size: 2rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.roadmap-title{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  h1{
+    margin: 0;
+    color: #fff;
+  }
 }
 
-.roadmap-level {
-  margin-bottom: 2.5rem;
-  border: 1px solid #e9ecef;
+.roadmap-level{
+  margin-top: 40px;
+}
+
+.level-title{
+  font-size: 2.5rem;
+  color: #fff;
+}
+
+.week-card{
+  display: flex;
+  flex-direction: column;
+  padding: 20px 30px;
+  background: linear-gradient(135deg, #a1199f 0%, #3bc1c8 100%);
   border-radius: 12px;
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  margin-bottom: 15px;
+  border-left-width: 10px;
+  border-left-style: solid;
+  border-left-color: rgb(168, 124, 168);
+  transition: transform 0.2s easex;
 }
 
-.level-title {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 1rem 1.5rem;
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.week-block {
-  margin: 0;
-  padding: 1.5rem;
-  border-bottom: 1px solid #f1f3f4;
-  transition: background-color 0.3s ease;
-}
-
-.week-block:last-child {
-  border-bottom: none;
-}
-
-.week-block:hover {
-  background-color: #f8f9fa;
-}
-
-.week-title {
-  color: #495057;
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e9ecef;
-}
-
-.subtopics-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.subtopic-item {
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #667eea;
-}
-
-.subtopic-item:last-child {
-  margin-bottom: 0;
-}
-
-.subtopic-header {
+.week-header{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
 }
 
-.subtopic-header strong {
-  color: #2c3e50;
-  font-size: 1.1rem;
-  text-transform: capitalize;
+.week-card:hover{
+  transform: translateY(-2px);
 }
 
-.time-badge {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  white-space: nowrap;
+.week-info{
+  display: flex;
+  flex-direction: column;
 }
 
-.points-list {
-  list-style: none;
-  padding: 0;
+.week-num{
+  font-size: 1rem;
+  color: #ffc800;
   margin: 0;
 }
 
-.point-item {
-  padding: 0.5rem 0;
-  color: #555;
-  font-size: 0.95rem;
-  line-height: 1.5;
+.week-topic{
+  margin: 8px;
+  font-size: 1.7rem;
+  font-weight: 400;
+  color: #f7f7f7;
+}
+
+.week-arrow {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.week-arrow.rotated {
+  transform: rotate(90deg);
+}
+
+.subtopics{
+  padding: 10px 12px 12px;
+}
+
+.sub-container{
+  padding: 10px 10px 15px 35px;
+  margin-block: 2rem;
+  background-color: #47215cac;
+  color: #fff;
+  border-radius: 31px;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
   position: relative;
-  padding-left: 1.5rem;
-  text-transform: capitalize;
+  padding-right: 150px;
+  max-width: 800px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.point-item:before {
-  content: "•";
-  color: #667eea;
-  font-weight: bold;
-  position: absolute;
-  left: 0;
-  top: 0.5rem;
-}
-
-.no-subtopics {
-  color: #6c757d;
-  font-style: italic;
-  text-align: center;
-  padding: 1rem;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .roadmap-result {
-    padding: 1rem;
-    width: 95%;
-  }
-  
-  .roadmap-title {
+.subtopic-info{
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  h4{
     font-size: 1.5rem;
-  }
-  
-  .level-title {
-    font-size: 1.2rem;
-    padding: 0.75rem 1rem;
-  }
-  
-  .week-block {
-    padding: 1rem;
-  }
-  
-  .week-title {
-    font-size: 1.1rem;
-  }
-  
-  .subtopic-header {
-    flex-direction: column;
-    align-items: flex-start;
+    margin-right: 60px;
+    font-weight: 630;
   }
 }
+
+.sub-num{
+  font-size: 3.7rem;
+  font-weight: 900; 
+  margin: 0;
+  align-self: center;
+  color: transparent;
+  -webkit-text-stroke: 0.5px rgb(243, 236, 28);
+}
+
+.points{
+  margin-left: 35px;
+  margin-top: -25px;
+  font-size: 18px;
+  font-weight: 300;
+  color: #ffbcf8;
+  max-width: 700px;
+}
+
+.time{
+  font-size: 17px;
+  font-weight: 100;
+  color:  #00ffea;
+}
+
+.buttons-container{
+  position: absolute;
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.quiz-butt, .resource-butt{
+  padding: 12px 25px;
+  font-size: 17px;
+  border-radius: 25px;
+  border: none;
+  transition: all 0.3s ease;
+  background: transparent;
+  border: 0.1rem solid #ee00ff;
+  color: #f043e2;
+}
+
+.quiz-butt:hover, .resource-butt:hover{
+  background: #ee00ff;
+  color: white;
+  box-shadow: 0 0 1rem #ee00ff;
+}
+
+.week-navigation {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-butt {
+  padding: 12px 25px;
+  font-size: 17px;
+  border-radius: 25px;
+  border: none;
+  transition: all 0.3s ease;
+  background: transparent;
+  border: 0.1rem solid #ee00ff;
+  color: #f043e2;
+  cursor: pointer;
+}
+
+.nav-butt:hover:not(:disabled) {
+  background: #ee00ff;
+  color: white;
+  box-shadow: 0 0 1rem #ee00ff;
+}
+
+.nav-butt:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.animated-week {
+  will-change: transform, opacity;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 20px;
+  background: #080416;
+}
+
+.tab {
+  padding: 12px 25px;
+  margin: 20px 0 0 20px;
+  border-radius: 20px;
+  border: none;
+  background: #45e3ec;
+  box-shadow: 0 0 2rem #00c3ff;
+  transition: all 0.3s ease;
+}
+
+.tab:hover{
+  background: #00ffea;
+  box-shadow: none;
+}
+
+/* Overview structure */
+.roadmap-overview {
+  background: #080416;
+  padding: 20px 100px;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.overview-level {
+  margin-bottom: 30px;
+}
+
+.overview-level-title {
+  font-size: 2rem;
+  color: #f9c714;
+  margin-bottom: 10px;
+  text-shadow: 0 0 1rem #f9c714;
+}
+
+.overview-weeks {
+  list-style: none;
+  padding-left: 0;
+}
+
+.overview-week {
+  padding: 10px 20px;
+  margin-bottom: 8px;
+  background: #47215cac;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.overview-week:hover {
+  background: #c400d2;
+}
+
+/* For week content and lock icon layout */
+.overview-week-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Style for lock icon */
+.week-lock-icon {
+  margin-left: 10px;
+  font-size: 1.2rem;
+  color: #f9c714;
+}
+
+/* Dimmed and disabled styling for locked weeks */
+.locked-week {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+
+
+/* ---------------------
+   Spinner Styles
+--------------------- */
+
+.quiz-loading {
+  min-height: 93vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #080416;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 8px solid transparent;
+  border-top: 8px solid #ee00ff;
+  border-left: 8px solid #01cbe2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+.preparing-word {
+  color: #ee00ff;
+  
+}
+
+.quiz-word {
+  color: #01cbe2;
+}
+
