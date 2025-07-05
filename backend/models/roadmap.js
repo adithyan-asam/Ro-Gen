@@ -32,7 +32,9 @@ const SubtopicSchema = new mongoose.Schema({
 
 const WeekSchema = new mongoose.Schema({
   topic: { type: String, required: true },
-  subtopics: [SubtopicSchema]
+  subtopics: [SubtopicSchema],
+  averageScore: { type: Number, default: null },
+  isCompleted: { type: Boolean, default: false }
 }, { _id: false });
 
 const LevelSchema = new mongoose.Schema({

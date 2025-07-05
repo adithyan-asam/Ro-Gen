@@ -1,7 +1,8 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../context/AuthContext';
-import Roadmapfetch from './api/RoadmapApi';
+import AuthContext from '../../context/AuthContext';
+import Roadmapfetch from '../api/RoadmapApi';
+import ProfileDropdown from './ProfileDropdown';
 import './Search.css';
 
 const Search = () => {
@@ -74,7 +75,7 @@ const Search = () => {
           </div>
       {loading && <p className="loading">Loading roadmap...</p>}
       {error && <p className="error">{error}</p>}
-      <button className='logout-butt' onClick={logout}>Logout</button>
+      <ProfileDropdown user={user} onLogout={logout} />
     </div>
   );
 };

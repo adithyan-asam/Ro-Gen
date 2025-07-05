@@ -1,4 +1,7 @@
 import { FaLock, FaUnlock } from 'react-icons/fa';
+import { useContext } from 'react';
+import ProfileDropdown from '../search/ProfileDropdown';
+import AuthContext from '../../context/AuthContext';
 import './RoadmapViewer.css';
 
 const RoadmapOverview = ({
@@ -8,6 +11,7 @@ const RoadmapOverview = ({
   setActiveTab
 }) => {
   const levels = ['beginner', 'intermediate', 'advanced'];
+  const { user, logout } = useContext(AuthContext);
 
   const isWeekUnlocked = (level, weekIndex) => {
     const lockIndex = lockIndexes?.[level] ?? -1;
@@ -24,6 +28,9 @@ const RoadmapOverview = ({
 
   return (
     <div className="roadmap-overview">
+
+      <ProfileDropdown user={user} onLogout={logout} />
+
       {levels.map((level, levelIndex) => {
         const weeks = Object.entries(roadmap[level] || {});
         return (

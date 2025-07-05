@@ -4,7 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Home from './components/Home';
 import Login from './components/secure/Login';
 import Signup from './components/secure/Signup';
-import Search from './components/Search';
+import Search from './components/search/Search';
 import RoadmapTabs from './components/roadmap/RoadmapTabs';
 import Quiz from './components/quiz/Quiz';
 // import Navbar from './components/Navbar';

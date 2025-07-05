@@ -1,0 +1,81 @@
+/* Profile Dropdown Styles */
+.profile-menu {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.menu-butt {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.prof-pic {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #26a69a, #00897b);
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  user-select: none;
+}
+
+.prof-pic:hover{
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #00897b, #26a69a);
+}
+
+.dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  width: 180px;
+  padding: 10px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.my-profile-box, .logout-box {
+  margin: 5px 0;
+}
+
+.my-profile-butt,
+.logout-butt {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  color: #333;
+}
+
+.my-profile-butt:hover,
+.logout-butt:hover {
+  background-color: #e0dfdf;
+}
+
+.logout-butt .logout-pic,
+.my-profile-butt .user-pic {
+  color: #555;
+}

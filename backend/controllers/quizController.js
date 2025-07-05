@@ -47,94 +47,158 @@ async function generateQuiz(req, res) {
   }
 }
 
-async function saveScore(req,res){
-  try{
-    const { course, level, weekIndex, subtopicIndex, score,time } = req.body;
+async function saveScore(req, res) {
+  try {
+    const { course, level, weekIndex, subtopicIndex, score, time } = req.body;
     const userId = req.user.id;
-    if(!course || !level || weekIndex === undefined || subtopicIndex === undefined || score === undefined){
+
+    if (!course || !level || weekIndex === undefined || subtopicIndex === undefined || score === undefined) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
+
+    // 1. Save quiz score
     const path = `${level}.weeks.${weekIndex}.subtopics.${subtopicIndex}.quiz.score`;
-    const result = await Roadmap.updateOne(
-      {userId,course, totalTime: time},
+    await Roadmap.updateOne(
+      { userId, course, totalTime: time },
       { $set: { [path]: score } }
     );
-    if(result.modifiedCount > 0){
-      return res.status(200).json({message : 'score saved succesfully'});
+
+    // 2. Load roadmap
+    const roadmap = await Roadmap.findOne({ userId, course, totalTime: time });
+    if (!roadmap || !roadmap[level]) {
+      return res.status(404).json({ message: 'Roadmap or level not found' });
     }
-    else{
-      return res.status(404).json({ message: 'Roadmap or quiz not found.' });
+
+    const week = roadmap[level].weeks[weekIndex];
+    const subtopics = week?.subtopics || [];
+
+    // 3. Check if all quizzes attempted
+    const allAttempted = subtopics.every(sub => sub.quiz && typeof sub.quiz.score === 'number');
+
+    if (!allAttempted) {
+      return res.status(200).json({
+        completed: false,
+        message: 'Score saved. Week not fully attempted yet.'
+      });
     }
-  }catch (error) {
+
+    // 4. Calculate average
+    const total = subtopics.reduce((sum, sub) => sum + sub.quiz.score, 0);
+    const avgScore = total / subtopics.length;
+    const isCompleted = avgScore >= 50;
+
+    // 5. Update averageScore and isCompleted
+    const weekPath = `${level}.weeks.${weekIndex}`;
+    await Roadmap.updateOne(
+      { userId, course, totalTime: time },
+      {
+        $set: {
+          [`${weekPath}.averageScore`]: avgScore,
+          [`${weekPath}.isCompleted`]: isCompleted
+        }
+      }
+    );
+
+    let unlocked = false;
+
+    // 6. Unlock next week if not already unlocked
+    const currentLockIndex = roadmap[level].lockIndex;
+    if (isCompleted && currentLockIndex === weekIndex + 1) {
+      const incPath = `${level}.lockIndex`;
+      await Roadmap.updateOne(
+        { userId, course, totalTime: time },
+        { $inc: { [incPath]: 1 } }
+      );
+      unlocked = true;
+
+      // Also unlock next level if last week of this level
+      const len = roadmap[level].weeks.length;
+      if (weekIndex === len - 1) {
+        const nextLevel = level === 'beginner' ? 'intermediate' : level === 'intermediate' ? 'advanced' : null;
+        if (nextLevel) {
+          const nextPath = `${nextLevel}.lockIndex`;
+          await Roadmap.updateOne(
+            { userId, course, totalTime: time },
+            { $inc: { [nextPath]: 1 } }
+          );
+        }
+      }
+    }
+
+    return res.status(200).json({
+      completed: isCompleted,
+      unlocked,
+      averageScore: avgScore,
+      message: unlocked ? '✅ Next week unlocked!' : '✅ Week completed, but already unlocked earlier.'
+    });
+
+  } catch (error) {
     console.error('Quiz score saving failed:', error);
     res.status(500).json({ message: 'Failed to save quiz score.' });
   }
 }
 
-async function checkScore(req,res){
-  try{
-    const {course, level, weekIndex, time} = req.body;
+
+async function checkScore(req, res) {
+  try {
+    const { course, level, weekIndex, time } = req.body;
     const userId = req.user.id;
+
     if (!course || !level || weekIndex === undefined) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
-    const roadmap = await Roadmap.findOne({userId,course,totalTime: time});
+
+    const roadmap = await Roadmap.findOne({ userId, course, totalTime: time });
     if (!roadmap || !roadmap[level]) {
       return res.status(404).json({ message: 'Roadmap or level not found' });
     }
+
     const week = roadmap[level].weeks[weekIndex];
+    const lockIndex = roadmap[level].lockIndex;
     if (!week) {
-      return res.status(404).json({ message: 'Week not found' });
+      return res.status(404).json({ message: 'Week not found.' });
     }
 
-    const subtopics = week.subtopics;
-    let totalScore = 0;
-    let quizCount = 0;
-    let inComplete = false;
-    for(const sub of subtopics){
-      if(!sub.quiz || typeof sub.quiz.score!=='number'){
-        inComplete = true;
-        break;
-      }
-      else{
-        totalScore += sub.quiz.score;
-        quizCount++;
-      }
-    }
-
-    if(inComplete){
+    // CASE 1: Not completed, missing quizzes
+    if (week.averageScore === null && !week.isCompleted) {
       return res.status(200).json({
         allowed: false,
         average: 0,
-        message: 'Please complete all quizzes in this week before proceeding.'
+        message: '❌ Please complete all quizzes in this week before proceeding.'
       });
     }
 
-    const average = totalScore/quizCount;
-    const lockIndex = roadmap[level].lockIndex;
-    if (average >= 50 && (lockIndex===(weekIndex+1))) {
-      const path = `${level}.lockIndex`;
-      const result = await Roadmap.updateOne(
-        { userId, course, totalTime: time },
-        { $inc: { [path]: 1 } }
-      );
-
-      if (result.modifiedCount === 0) {
-        return res.status(404).json({ message: "Roadmap not updated." });
-      }
+    // Case 2: Completed but already unlocked
+    if (week.isCompleted && lockIndex > weekIndex + 1) {
+      return res.status(200).json({
+        allowed: true,
+        average: week.averageScore,
+        message: '' // No need to show unlock alert again
+      });
     }
 
+    // Case 3: Completed and exactly at unlock point → Show unlock message
+    if (week.isCompleted && lockIndex === weekIndex + 1) {
+      return res.status(200).json({
+        allowed: true,
+        average: week.averageScore,
+        message: '✅ Next week unlocked!'
+      });
+    }
+
+    // CASE 3: All attempted but score < 50%
     return res.status(200).json({
-      allowed: average >= 50,
-      average,
-      message: average >= 50 ? '✅ Next week unlocked!' : '❌ Score below 50%. Try again.'
+      allowed: false,
+      average: week.averageScore,
+      message: '❌ Score below 50%. Try again.'
     });
-  }
-  catch(err){
+
+  } catch (err) {
     console.error('Error checking week score:', err);
     res.status(500).json({ message: 'Server error while checking score.' });
   }
 }
+
 
 async function getLockIndices(req,res){
   try {

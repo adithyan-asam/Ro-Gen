@@ -119,7 +119,7 @@
     border: 1px solid rgba(224, 16, 16, 0.3);
 }
 
-.logout-butt{
+/* .logout-butt{
     background: #0c0c0c;
     color: white;
     position: absolute;
@@ -130,12 +130,12 @@
     border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
-}
+} */
 
-.logout-butt:hover{
+/* .logout-butt:hover{
     background: #e01010;
     color: white;
-}
+} */
 
 @media (max-width: 600px) {
   .search-box {
@@ -163,8 +163,8 @@
     padding: 12px;
   }
 
-  .logout-butt {
+  /* .logout-butt {
     position: static;
     margin-top: 20px;
-  }
+  } */
 }

@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import QuizApi from '../api/QuizApi';
 import axios from 'axios';
+import ProfileDropdown from '../search/ProfileDropdown';
+import AuthContext from '../../context/AuthContext';
+import { FaCheckCircle } from 'react-icons/fa';
 import './RoadmapViewer.css';
 
 const RoadmapViewer = ({
@@ -19,6 +22,7 @@ const RoadmapViewer = ({
 
   const levels = ['beginner', 'intermediate', 'advanced'];
   const [direction, setDirection] = useState(0);
+  const { user, logout } = useContext(AuthContext);
 
   const currentLevel = levels[currentLevelIndex];
   const weeks = Object.entries(roadmap?.[currentLevel] || {});
@@ -79,19 +83,23 @@ const RoadmapViewer = ({
       );
       
       if (res.data.allowed) {
-        alert(res.data.message);
+        if (res.data.message) {
+          alert(res.data.message);
+        }
         if (currentWeekIndex < weeks.length - 1) {
           setDirection(1);
           updateURL(currentLevelIndex, currentWeekIndex + 1);
-        } else if (currentLevelIndex < levels.length - 1) {
+        }
+        else if (currentLevelIndex < levels.length - 1){
           const nextLevel = levels[currentLevelIndex + 1];
           const nextWeeks = Object.entries(roadmap[nextLevel] || {});
-          if (nextWeeks.length) {
+          if (nextWeeks.length){
             setDirection(1);
             updateURL(currentLevelIndex + 1, 0);
           }
         }
-      } else {
+      }
+      else {
         alert(res.data.message || 'Score too low to proceed to next week.');
       }
     } catch (err) {
@@ -157,8 +165,12 @@ const RoadmapViewer = ({
 
   return (
     <div className="roadmap-result">
+      <ProfileDropdown user={user} onLogout={logout} />
+
       <div className="roadmap-title">
-        <h1><strong>{course}</strong></h1>
+        <h1>
+          <strong>{course}</strong>
+        </h1>
       </div>
 
       <div className="roadmap-level">
@@ -178,6 +190,14 @@ const RoadmapViewer = ({
               className="week-card animated-week"
               style={{ originX: 0.5 }}
             >
+              {console.log(weekData.isCompleted)}
+              {weekData.isCompleted && (
+                <div className="week-completed-badge">
+                  <span>Completed</span>
+                  <FaCheckCircle className="completed-icon" />
+                </div>
+              )}
+
               <div className="week-header">
                 <div className="week-info">
                   <p className="week-num">
@@ -206,7 +226,16 @@ const RoadmapViewer = ({
                       <button
                         className="quiz-butt"
                         onClick={() =>
-                          handleQuiz(course, currentLevel, weekData.topic, sub.subtopic, sub.points, currentWeekIndex, i, time)
+                          handleQuiz(
+                            course,
+                            currentLevel,
+                            weekData.topic,
+                            sub.subtopic,
+                            sub.points,
+                            currentWeekIndex,
+                            i,
+                            time
+                          )
                         }
                       >
                         Quiz

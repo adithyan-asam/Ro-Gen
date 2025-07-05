@@ -57,7 +57,7 @@ const Quiz = () => {
   const handleFinish = async() => {
     const score = Math.round((correctCount/questions.length)*100);
     try {
-      await axios.post(
+      const res = await axios.post(
         "http://localhost:5001/api/quiz/submit-score",
         {
           course,
@@ -74,6 +74,10 @@ const Quiz = () => {
           },
         }
       );
+
+      if (res.data.completed && res.data.unlocked) {
+        alert(res.data.message);
+      }
       
       // Navigate back to specific week URL instead of using navigate(-1)
       if (returnUrl && roadmapState) {
