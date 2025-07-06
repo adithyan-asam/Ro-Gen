@@ -7,6 +7,7 @@ import Signup from './components/secure/Signup';
 import Search from './components/search/Search';
 import RoadmapTabs from './components/roadmap/RoadmapTabs';
 import Quiz from './components/quiz/Quiz';
+import Profile from './components/profile/Profile';
 // import Navbar from './components/Navbar';
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/roadmap/:level/:week"
+                        path="/roadmap/:level?/:week?"
                         element={
                             <ProtectedRoute>
                                 <RoadmapTabs />
@@ -39,6 +40,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <Quiz />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRoute>
+                                <Profile />
                             </ProtectedRoute>
                         }
                     />

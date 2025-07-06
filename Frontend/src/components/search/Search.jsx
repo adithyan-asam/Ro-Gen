@@ -18,16 +18,16 @@ const Search = () => {
       setError('Please enter both course and time');
       return;
     }
-    
+
     setLoading(true);
     setError('');
-    
+
     try {
       const token = localStorage.getItem('token');
-      const data = await Roadmapfetch(course, time, token);
-      const beginnerWeeks = Object.keys(data.beginner || {});
-      const firstWeek = beginnerWeeks[0];
-      navigate(`/roadmap/beginner/${firstWeek}`, { state: { roadmap: data, course, time } });
+      // Just to validate that roadmap exists, but we won't pass it
+      await Roadmapfetch(course, time, token);
+
+      navigate(`/roadmap`, { state: { course, time } });
     } catch (err) {
       setError(`Failed to fetch roadmap: ${err.message}`);
     } finally {
@@ -35,7 +35,6 @@ const Search = () => {
     }
   };
 
-  // Add this function to handle Enter key press
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
@@ -44,35 +43,36 @@ const Search = () => {
 
   return (
     <div className="search-container">
-          <h1>Welcome, {user?.name}!</h1>
-          <h2 className='title'>What do you want to learn?</h2>
-          
-          <div className='search-box'>
-            <span className='icon'>📚</span>
-            <input 
-              type="text" 
-              placeholder='Enter a Course (e.g., React, Python)'
-              value={course}
-              onChange={(e) => setCourse(e.target.value)}
-              onKeyDown={handleKeyDown}  // Add keydown listener
-            />
-          </div>
+      <h1>Welcome, {user?.name}!</h1>
+      <h2 className='title'>What do you want to learn?</h2>
 
-          <div className='search-input-container'>
-            <div className='search-box'>
-              <span className='icon'>⏰</span>
-              <input
-                type="text" 
-                placeholder='Enter Duration (e.g., 30 days)'
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                onKeyDown={handleKeyDown}  // Add keydown listener
-              />
-            </div>
-            <button className='search-button' onClick={handleSearch} disabled={loading}>
-              {loading ? '⏳' : '🔍'}
-            </button>
-          </div>
+      <div className='search-box'>
+        <span className='icon'>📚</span>
+        <input
+          type="text"
+          placeholder='Enter a Course (e.g., React, Python)'
+          value={course}
+          onChange={(e) => setCourse(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+      </div>
+
+      <div className='search-input-container'>
+        <div className='search-box'>
+          <span className='icon'>⏰</span>
+          <input
+            type="text"
+            placeholder='Enter Duration (e.g., 30 days)'
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+        <button className='search-button' onClick={handleSearch} disabled={loading}>
+          {loading ? '⏳' : '🔍'}
+        </button>
+      </div>
+
       {loading && <p className="loading">Loading roadmap...</p>}
       {error && <p className="error">{error}</p>}
       <ProfileDropdown user={user} onLogout={logout} />

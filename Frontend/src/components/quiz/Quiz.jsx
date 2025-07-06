@@ -7,17 +7,16 @@ const Quiz = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { 
-    quiz, 
-    course, 
-    level, 
-    weekIndex, 
-    subtopicIndex, 
-    time, 
-    returnUrl, 
-    roadmapState 
+  const {
+    quiz,
+    course,
+    level,
+    weekIndex,
+    subtopicIndex,
+    time,
+    weekName
   } = location.state || {};
-  
+
   const questions = quiz?.questions || [];
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -39,8 +38,8 @@ const Quiz = () => {
     if (showFeedback) return;
     setSelectedOptionIndex(index);
     setShowFeedback(true);
-    if(index === correctIndex){
-      setCorrectCount((prev) => prev+1);
+    if (index === correctIndex) {
+      setCorrectCount((prev) => prev + 1);
     }
   };
 
@@ -54,8 +53,8 @@ const Quiz = () => {
     }
   };
 
-  const handleFinish = async() => {
-    const score = Math.round((correctCount/questions.length)*100);
+  const handleFinish = async () => {
+    const score = Math.round((correctCount / questions.length) * 100);
     try {
       const res = await axios.post(
         "http://localhost:5001/api/quiz/submit-score",
@@ -65,7 +64,7 @@ const Quiz = () => {
           weekIndex,
           subtopicIndex,
           score,
-          time
+          time,
         },
         {
           headers: {
@@ -78,18 +77,16 @@ const Quiz = () => {
       if (res.data.completed && res.data.unlocked) {
         alert(res.data.message);
       }
-      
-      // Navigate back to specific week URL instead of using navigate(-1)
-      if (returnUrl && roadmapState) {
-        navigate(returnUrl, { state: roadmapState });
-      } else {
-        navigate(-1);
-      }
+
+      // Reconstruct return URL and navigate with course/time only
+      navigate(`/roadmap/${level}/${weekName}`, {
+        state: { course, time },
+      });
     } catch (error) {
       console.error("Error submitting quiz score:", error);
       alert("Failed to save score. Please try again.");
     }
-  }
+  };
 
   if (!quiz) return null;
 
@@ -99,62 +96,60 @@ const Quiz = () => {
 
       {!isFinished ? (
         <div className="question-card">
-        <h2 className="question-text">
-          {currentQuestionIndex + 1}. {currentQuestion.question}
-        </h2>
+          <h2 className="question-text">
+            {currentQuestionIndex + 1}. {currentQuestion.question}
+          </h2>
 
-        <ul className="options-list">
-          {currentQuestion.options.map((option, index) => {
-            const isCorrect = index === correctIndex;
-            const isSelected = index === selectedOptionIndex;
-            const buttonClass = showFeedback
-              ? isCorrect
-                ? "option-button correct"
-                : isSelected
-                ? "option-button incorrect"
-                : "option-button"
-              : "option-button";
+          <ul className="options-list">
+            {currentQuestion.options.map((option, index) => {
+              const isCorrect = index === correctIndex;
+              const isSelected = index === selectedOptionIndex;
+              const buttonClass = showFeedback
+                ? isCorrect
+                  ? "option-button correct"
+                  : isSelected
+                  ? "option-button incorrect"
+                  : "option-button"
+                : "option-button";
 
-            return (
-              <li key={index} className="option-item">
-                <button
-                  className={buttonClass}
-                  onClick={() => handleOptionSelect(index)}
-                  disabled={showFeedback}
-                >
-                  {index+1}. {option}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+              return (
+                <li key={index} className="option-item">
+                  <button
+                    className={buttonClass}
+                    onClick={() => handleOptionSelect(index)}
+                    disabled={showFeedback}
+                  >
+                    {index + 1}. {option}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
 
-        {showFeedback && (
-          <div className="feedback-box">
-            <p className="feedback-result">
-              {selectedOptionIndex === correctIndex
-                ? "✅ Correct!"
-                : "❌ Incorrect."}
-            </p>
-            <p>
-              <strong>Reason:</strong> {currentQuestion.reason}
-            </p>
-          </div>
-        )}
+          {showFeedback && (
+            <div className="feedback-box">
+              <p className="feedback-result">
+                {selectedOptionIndex === correctIndex
+                  ? "✅ Correct!"
+                  : "❌ Incorrect."}
+              </p>
+              <p>
+                <strong>Reason:</strong> {currentQuestion.reason}
+              </p>
+            </div>
+          )}
 
-        <button
-          className="next-button"
-          onClick={handleNextQuestion}
-          disabled={!showFeedback}
-        >
-          {currentQuestionIndex < questions.length - 1 ? "Next ➜" : "Finish"}
-        </button>
-      </div>
+          <button
+            className="next-button"
+            onClick={handleNextQuestion}
+            disabled={!showFeedback}
+          >
+            {currentQuestionIndex < questions.length - 1 ? "Next ➜" : "Finish"}
+          </button>
+        </div>
       ) : (
         <div className="question-card">
-          <h2 className="question-text">
-            🎉 Quiz Complete!
-          </h2>
+          <h2 className="question-text">🎉 Quiz Complete!</h2>
           <p className="quiz-result">
             Your Score: <strong>{correctCount}</strong> / {questions.length}
           </p>

@@ -159,6 +159,8 @@
 }
 
 .week-navigation {
+  position: relative; /* For z-index context */
+  z-index: 1;
   margin-top: 30px;
   display: flex;
   justify-content: space-between;
@@ -189,6 +191,9 @@
 
 .animated-week {
   will-change: transform, opacity;
+  contain: layout;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
 
 .week-completed-badge {
@@ -300,7 +305,7 @@
    Spinner Styles
 --------------------- */
 
-.quiz-loading {
+/* .quiz-loading {
   min-height: 93vh;
   display: flex;
   flex-direction: column;
@@ -338,5 +343,9 @@
 
 .quiz-word {
   color: #01cbe2;
+} */
+
+button {
+  transition: all 0.3s ease;
 }
 

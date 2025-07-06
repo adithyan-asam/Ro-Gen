@@ -22,13 +22,12 @@ const RoadmapOverview = ({
     const level = levels[levelIndex];
     if (!isWeekUnlocked(level, weekIndex)) return;
 
-    updateURL(levelIndex, weekIndex);
-    setActiveTab("viewer");
+    updateURL(levelIndex, weekIndex); // sync URL
+    setActiveTab('viewer');           // switch back to viewer
   };
 
   return (
     <div className="roadmap-overview">
-
       <ProfileDropdown user={user} onLogout={logout} />
 
       {levels.map((level, levelIndex) => {
@@ -44,17 +43,15 @@ const RoadmapOverview = ({
                 return (
                   <li
                     key={weekName}
-                    className={`overview-week ${!unlocked ? "locked-week" : ""}`}
+                    className={`overview-week ${!unlocked ? 'locked-week' : ''}`}
                     onClick={() => handleSelect(levelIndex, weekIndex)}
                   >
                     <div className="overview-week-content">
                       <div className="week-lock-icon">
                         {unlocked ? <FaUnlock /> : <FaLock />}
-                      </div>  
+                      </div>
                       <div>
-                        <strong>
-                          {weekName.charAt(0).toUpperCase() + weekName.slice(1)}
-                        </strong>
+                        <strong>{weekName.charAt(0).toUpperCase() + weekName.slice(1)}</strong>
                         : {weekData.topic}
                       </div>
                     </div>

@@ -1,31 +1,32 @@
-import { useState, useEffect,useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
-import QuizApi from '../api/QuizApi';
 import axios from 'axios';
+import QuizApi from '../api/QuizApi';
 import ProfileDropdown from '../search/ProfileDropdown';
 import AuthContext from '../../context/AuthContext';
 import { FaCheckCircle } from 'react-icons/fa';
+import LoadingSpinner from '../ui/LoadingSpinner';
 import './RoadmapViewer.css';
 
 const RoadmapViewer = ({
   roadmap,
   course,
+  time,
   currentLevelIndex,
   currentWeekIndex,
-  updateURL,
-  time
+  updateURL
 }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  const levels = ['beginner', 'intermediate', 'advanced'];
   const [direction, setDirection] = useState(0);
   const { user, logout } = useContext(AuthContext);
 
+  const levels = ['beginner', 'intermediate', 'advanced'];
   const currentLevel = levels[currentLevelIndex];
   const weeks = Object.entries(roadmap?.[currentLevel] || {});
+  const [week, weekData] = weeks[currentWeekIndex] || [];
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -36,38 +37,46 @@ const RoadmapViewer = ({
     return null;
   }
 
-  const handleQuiz = async (course, level, topic, subtopic, points, weekIndex, subtopicIndex, time) => {
+  const handleQuiz = async (
+    course,
+    level,
+    topic,
+    subtopic,
+    points,
+    weekIndex,
+    subtopicIndex,
+    time
+  ) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
       const data = await QuizApi(course, level, topic, subtopic, points, time, token);
-      
-      // Pass current URL info to quiz so it can return to the correct week
       const currentWeekName = Object.keys(roadmap[level])[weekIndex];
-      navigate('/quiz', { 
-        state: { 
-          quiz: data, 
-          course, 
-          level, 
-          weekIndex, 
-          subtopicIndex, 
+
+      navigate('/quiz', {
+        state: {
+          quiz: data,
+          course,
+          level,
+          weekIndex,
+          subtopicIndex,
           time,
-          returnUrl: `/roadmap/${level}/${currentWeekName}`,
+          weekName: currentWeekName,
           roadmapState: { roadmap, course, time }
-        } 
+        }
       });
     } catch (err) {
-      console.log(`failed to fetch quiz: ${err.message}`);
+      console.error(`Failed to fetch quiz: ${err.message}`);
     } finally {
       setLoading(false);
     }
   };
 
-  const goNextWeek = async() => {
+  const goNextWeek = async () => {
     const token = localStorage.getItem('token');
-
     try {
-      const res = await axios.post('http://localhost:5001/api/quiz/check-score',
+      const res = await axios.post(
+        'http://localhost:5001/api/quiz/check-score',
         {
           course,
           level: currentLevel,
@@ -81,30 +90,26 @@ const RoadmapViewer = ({
           }
         }
       );
-      
+
       if (res.data.allowed) {
-        if (res.data.message) {
-          alert(res.data.message);
-        }
+        if (res.data.message) alert(res.data.message);
+
         if (currentWeekIndex < weeks.length - 1) {
           setDirection(1);
           updateURL(currentLevelIndex, currentWeekIndex + 1);
-        }
-        else if (currentLevelIndex < levels.length - 1){
-          const nextLevel = levels[currentLevelIndex + 1];
-          const nextWeeks = Object.entries(roadmap[nextLevel] || {});
-          if (nextWeeks.length){
+        } else if (currentLevelIndex < levels.length - 1) {
+          const nextWeeks = Object.entries(roadmap[levels[currentLevelIndex + 1]] || {});
+          if (nextWeeks.length) {
             setDirection(1);
             updateURL(currentLevelIndex + 1, 0);
           }
         }
-      }
-      else {
-        alert(res.data.message || 'Score too low to proceed to next week.');
+      } else {
+        alert(res.data.message || 'Score too low to proceed.');
       }
     } catch (err) {
       console.error('Failed to check score:', err);
-      alert('Error checking score. Please try again.');
+      alert('Error checking score. Try again.');
     }
   };
 
@@ -113,16 +118,13 @@ const RoadmapViewer = ({
       setDirection(-1);
       updateURL(currentLevelIndex, currentWeekIndex - 1);
     } else if (currentLevelIndex > 0) {
-      const prevLevel = levels[currentLevelIndex - 1];
-      const prevWeeks = Object.entries(roadmap[prevLevel] || {});
+      const prevWeeks = Object.entries(roadmap[levels[currentLevelIndex - 1]] || {});
       if (prevWeeks.length) {
         setDirection(-1);
         updateURL(currentLevelIndex - 1, prevWeeks.length - 1);
       }
     }
   };
-
-  const [week, weekData] = weeks[currentWeekIndex] || [];
 
   const variants = {
     enter: (direction) => ({
@@ -134,33 +136,25 @@ const RoadmapViewer = ({
       x: 0,
       opacity: 1,
       scale: 1,
-      transition: { 
+      transition: {
         type: 'spring',
         stiffness: 300,
         damping: 30,
-        duration: 0.5 
+        duration: 0.5
       }
     },
     exit: (direction) => ({
       x: direction > 0 ? -1000 : 1000,
       opacity: 0,
       scale: 0.95,
-      transition: { 
-        duration: 0.3 
+      transition: {
+        duration: 0.3
       }
-    }),
+    })
   };
 
   if (loading) {
-    return (
-      <div className="quiz-loading">
-        <div className="spinner"></div>
-        <p className="loading-text">
-          <span className="preparing-word">Preparing</span>{" "}
-          <span className="quiz-word">Quiz...</span>
-        </p>
-      </div>
-    );
+    return <LoadingSpinner/>;
   }
 
   return (
@@ -168,9 +162,7 @@ const RoadmapViewer = ({
       <ProfileDropdown user={user} onLogout={logout} />
 
       <div className="roadmap-title">
-        <h1>
-          <strong>{course}</strong>
-        </h1>
+        <h1><strong>{course}</strong></h1>
       </div>
 
       <div className="roadmap-level">
@@ -190,7 +182,6 @@ const RoadmapViewer = ({
               className="week-card animated-week"
               style={{ originX: 0.5 }}
             >
-              {console.log(weekData.isCompleted)}
               {weekData.isCompleted && (
                 <div className="week-completed-badge">
                   <span>Completed</span>
