@@ -5,7 +5,7 @@ const genAI = new GoogleGenAI({apiKey: process.env.API_KEY});
 async function generateResources(subtopic, points) {
   const result = await genAI.models.generateContent({
     contents: `The user is learning the subtopic "${subtopic}".The points to be covered in the subtopic are "${points}". Now 
-    Please provide a list of 4-5 best resources (video, article, interactive) that each fully cover all the points. For each resource, include the type, title, url, a "covers" array listing which points from above it covers (should be all points), and a "recommendedFor" phrase describing the learner type best suited for the resource.
+    Please provide a list of 4-5 best resources (video, article, interactive) that each fully cover all the points. For each resource, include the type, title, url, source(titl of the site), a "covers" array listing which points from above it covers (should be all points), and a "recommendedFor" phrase describing the learner type best suited for the resource.
 `,
     model: 'gemini-2.0-flash',
     config: {
@@ -20,6 +20,7 @@ For every resource, include:
 - type (video, article, interactive, etc.)
 - title
 - url
+- source: the title of the site
 - covers: a list of the main learning points from the subtopic that this resource covers. This list must include all points in the subtopic (the resource fully covers the subtopic).
 - recommendedFor: a short phrase describing which learner type the resource is best suited for (e.g., visual learners, hands-on learners, readers, etc.).
 
@@ -50,6 +51,7 @@ Output resources JSON:
       "type": "video",
       "title": "JavaScript Basics for Beginners",
       "url": "https://www.youtube.com/watch?v=W6NZfCO5SIk",
+      "source": "YouTube",
       "covers": [
         "variables",
         "data types",
@@ -62,6 +64,7 @@ Output resources JSON:
       "type": "article",
       "title": "JavaScript Syntax and Data Types - MDN",
       "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types",
+      "source": "MDN Web Docs",
       "covers": [
         "variables",
         "data types",
@@ -74,6 +77,7 @@ Output resources JSON:
       "type": "interactive",
       "title": "JavaScript Basics - freeCodeCamp",
       "url": "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/basic-javascript/",
+      "source": "Freecodecamp",
       "covers": [
         "variables",
         "data types",

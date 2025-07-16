@@ -13,6 +13,21 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const popularPaths = [
+    { name: 'React Development', duration: '30 days' },
+    { name: 'Python Programming', duration: '60 days' },
+    { name: 'Data Science', duration: '90 days' },
+    { name: 'Machine Learning', duration: '120 days' },
+    { name: 'Web Design', duration: '45 days' }
+  ];
+
+  const handlePathClick = (path) => {
+    setCourse(path.name);
+    setTime(path.duration);
+    // Optionally auto-trigger search:
+    // handleSearch();
+  };
+
   const handleSearch = async () => {
     if (!course.trim() || !time.trim()) {
       setError('Please enter both course and time');
@@ -24,9 +39,7 @@ const Search = () => {
 
     try {
       const token = localStorage.getItem('token');
-      // Just to validate that roadmap exists, but we won't pass it
       await Roadmapfetch(course, time, token);
-
       navigate(`/roadmap`, { state: { course, time } });
     } catch (err) {
       setError(`Failed to fetch roadmap: ${err.message}`);
@@ -75,6 +88,22 @@ const Search = () => {
 
       {loading && <p className="loading">Loading roadmap...</p>}
       {error && <p className="error">{error}</p>}
+
+      <div className='popular-paths-container'>
+        <h3 className='popular-paths-title'>Popular learning paths</h3>
+        <div className='popular-paths'>
+          {popularPaths.map((path, index) => (
+            <button
+              key={index}
+              className='path-button'
+              onClick={() => handlePathClick(path)}
+            >
+              {path.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <ProfileDropdown user={user} onLogout={logout} />
     </div>
   );

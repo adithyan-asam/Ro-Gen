@@ -66,4 +66,20 @@ async function generateRoadmap(req, res) {
     }
 }
 
-module.exports = { generateRoadmap };
+async function deleteRoadmap(req,res){
+  try {
+    const {course,time} = req.body;
+    const userId = req.user.id;
+    const result = await Roadmap.deleteOne({userId,course,totalTime: time});
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No matching document found." });
+    }
+
+    res.json({ message: "Resource deleted successfully." });
+  } catch (err) {
+    console.error("Delete error:", err);
+    res.status(500).json({ message: "Server error." });
+  }
+}
+
+module.exports = { generateRoadmap,deleteRoadmap };

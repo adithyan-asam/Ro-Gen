@@ -50,7 +50,7 @@ async function generateQuiz(req, res) {
 async function saveScore(req, res) {
   try {
     const { course, level, weekIndex, subtopicIndex, score, time } = req.body;
-    const userId = req.user.id;
+    const userId = req.user.id; 
 
     if (!course || !level || weekIndex === undefined || subtopicIndex === undefined || score === undefined) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -84,20 +84,24 @@ async function saveScore(req, res) {
 
     // 4. Calculate average
     const total = subtopics.reduce((sum, sub) => sum + sub.quiz.score, 0);
-    const avgScore = total / subtopics.length;
+    const avgScore = Math.round(total / subtopics.length);
     const isCompleted = avgScore >= 50;
 
     // 5. Update averageScore and isCompleted
     const weekPath = `${level}.weeks.${weekIndex}`;
+    const setFields = {
+      [`${weekPath}.averageScore`]: avgScore,
+    };
+
+    if (!week.isCompleted) {
+      setFields[`${weekPath}.isCompleted`] = isCompleted;
+    }
+
     await Roadmap.updateOne(
       { userId, course, totalTime: time },
-      {
-        $set: {
-          [`${weekPath}.averageScore`]: avgScore,
-          [`${weekPath}.isCompleted`]: isCompleted
-        }
-      }
+      { $set: setFields }
     );
+
 
     let unlocked = false;
 
@@ -183,6 +187,14 @@ async function checkScore(req, res) {
         allowed: true,
         average: week.averageScore,
         message: '✅ Next week unlocked!'
+      });
+    }
+
+    if(week.isCompleted && week.averageScore < 50){
+      return res.status(200).json({
+        allowed: true,
+        average: week.averageScore,
+        message: ''
       });
     }
 

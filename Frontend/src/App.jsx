@@ -8,6 +8,7 @@ import Search from './components/search/Search';
 import RoadmapTabs from './components/roadmap/RoadmapTabs';
 import Quiz from './components/quiz/Quiz';
 import Profile from './components/profile/Profile';
+import ResourcesPage from './components/resources/ResourcesPage';
 // import Navbar from './components/Navbar';
 
 function App() {
@@ -40,6 +41,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <Quiz />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/resources"
+                        element={
+                            <ProtectedRoute>
+                                <ResourcesPage />
                             </ProtectedRoute>
                         }
                     />

@@ -7,15 +7,8 @@ const Quiz = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const {
-    quiz,
-    course,
-    level,
-    weekIndex,
-    subtopicIndex,
-    time,
-    weekName
-  } = location.state || {};
+  const { quiz, course, level, weekIndex, subtopicIndex, time, weekName } =
+    location.state || {};
 
   const questions = quiz?.questions || [];
 
@@ -88,77 +81,82 @@ const Quiz = () => {
     }
   };
 
+
   if (!quiz) return null;
 
   return (
-    <div className="quiz-container">
-      <h1 className="quiz-title">Quiz</h1>
+    <>
+      <div className="quiz-container">
+        <h1 className="quiz-title">Quiz</h1>
 
-      {!isFinished ? (
-        <div className="question-card">
-          <h2 className="question-text">
-            {currentQuestionIndex + 1}. {currentQuestion.question}
-          </h2>
+        {!isFinished ? (
+          <div className="question-card">
+            <h2 className="question-text">
+              {currentQuestionIndex + 1}. {currentQuestion.question}
+            </h2>
 
-          <ul className="options-list">
-            {currentQuestion.options.map((option, index) => {
-              const isCorrect = index === correctIndex;
-              const isSelected = index === selectedOptionIndex;
-              const buttonClass = showFeedback
-                ? isCorrect
-                  ? "option-button correct"
-                  : isSelected
-                  ? "option-button incorrect"
-                  : "option-button"
-                : "option-button";
+            <ul className="options-list">
+              {currentQuestion.options.map((option, index) => {
+                const isCorrect = index === correctIndex;
+                const isSelected = index === selectedOptionIndex;
+                const buttonClass = showFeedback
+                  ? isCorrect
+                    ? "option-button correct"
+                    : isSelected
+                    ? "option-button incorrect"
+                    : "option-button"
+                  : "option-button";
 
-              return (
-                <li key={index} className="option-item">
-                  <button
-                    className={buttonClass}
-                    onClick={() => handleOptionSelect(index)}
-                    disabled={showFeedback}
-                  >
-                    {index + 1}. {option}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+                return (
+                  <li key={index} className="option-item">
+                    <button
+                      className={buttonClass}
+                      onClick={() => handleOptionSelect(index)}
+                      disabled={showFeedback}
+                    >
+                      {index + 1}. {option}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
 
-          {showFeedback && (
-            <div className="feedback-box">
-              <p className="feedback-result">
-                {selectedOptionIndex === correctIndex
-                  ? "✅ Correct!"
-                  : "❌ Incorrect."}
-              </p>
-              <p>
-                <strong>Reason:</strong> {currentQuestion.reason}
-              </p>
-            </div>
-          )}
+            {showFeedback && (
+              <div className="feedback-box">
+                <p className="feedback-result">
+                  {selectedOptionIndex === correctIndex
+                    ? "✅ Correct!"
+                    : "❌ Incorrect."}
+                </p>
+                <p>
+                  <strong>Reason:</strong> {currentQuestion.reason}
+                </p>
+              </div>
+            )}
 
-          <button
-            className="next-button"
-            onClick={handleNextQuestion}
-            disabled={!showFeedback}
-          >
-            {currentQuestionIndex < questions.length - 1 ? "Next ➜" : "Finish"}
-          </button>
-        </div>
-      ) : (
-        <div className="question-card">
-          <h2 className="question-text">🎉 Quiz Complete!</h2>
-          <p className="quiz-result">
-            Your Score: <strong>{correctCount}</strong> / {questions.length}
-          </p>
-          <button className="next-button" onClick={handleFinish}>
-            Return
-          </button>
-        </div>
-      )}
-    </div>
+            <button
+              className="next-button"
+              onClick={handleNextQuestion}
+              disabled={!showFeedback}
+            >
+              {currentQuestionIndex < questions.length - 1
+                ? "Next ➜"
+                : "Finish"}
+            </button>
+          </div>
+        ) : (
+          <div className="question-card">
+            <h2 className="question-text">🎉 Quiz Complete!</h2>
+            <p className="quiz-result">
+              Your Score: <strong>{correctCount}</strong> / {questions.length}
+            </p>
+            <button className="next-button" onClick={handleFinish}>
+              Return
+            </button>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

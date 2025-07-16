@@ -6,16 +6,18 @@
   z-index: 1000;
 }
 
+/* Avatar button */
 .menu-butt {
   background: none;
   border: none;
   cursor: pointer;
 }
 
+/* Avatar circle */
 .prof-pic {
   width: 45px;
   height: 45px;
-  background: linear-gradient(135deg, #26a69a, #00897b);
+  background: linear-gradient(135deg, #00bcd4, #00838f);
   color: white;
   font-weight: bold;
   font-size: 18px;
@@ -23,34 +25,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);
   user-select: none;
+  transition: all 0.3s ease;
 }
 
-.prof-pic:hover{
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(135deg, #00897b, #26a69a);
+.prof-pic:hover {
+  background: linear-gradient(135deg, #00838f, #00bcd4);
+  box-shadow: 0 6px 16px rgba(0, 188, 212, 0.4);
 }
 
+/* Dropdown menu */
 .dropdown {
   position: absolute;
   top: 55px;
   right: 0;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: #1e1e2f;
+  border: 1px solid #333;
   border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  width: 180px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  width: 190px;
   padding: 10px;
   animation: fadeIn 0.2s ease-in-out;
+  color: #ffffff;
 }
 
+/* Animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.my-profile-box, .logout-box {
+.my-profile-box,
+.logout-box {
   margin: 5px 0;
 }
 
@@ -67,15 +74,15 @@
   font-size: 16px;
   cursor: pointer;
   transition: background 0.2s ease-in-out;
-  color: #333;
+  color: #ffffff;
 }
 
 .my-profile-butt:hover,
 .logout-butt:hover {
-  background-color: #e0dfdf;
+  background-color: #3b3b4d;
 }
 
 .logout-butt .logout-pic,
 .my-profile-butt .user-pic {
-  color: #555;
+  color: #00bcd4;
 }

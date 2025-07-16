@@ -15,6 +15,7 @@ const ResourceSchema = new mongoose.Schema({
   type: { type: String, required: true },
   title: { type: String, required: true },
   url: { type: String, required: true },
+  source: {type: String, required: true}, 
   covers: [{ type: String, required: true }],
   recommendedFor: { type: String, required: true }
 }, { _id: false });

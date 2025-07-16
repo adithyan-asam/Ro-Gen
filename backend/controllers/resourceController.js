@@ -3,14 +3,14 @@ const Roadmap = require('../models/roadmap');
 
 async function generateLearningResources(req,res){
     try {
-      const { course, level, weekTopic, subtopicTitle, points } = req.body;
+      const { course, level, weekTopic, subtopicTitle, points, time } = req.body;
       const userId = req.user.id;
 
       if (!course || !level || !weekTopic || !subtopicTitle || !points) {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
-      const roadmap = await Roadmap.findOne({ userId, course });
+      const roadmap = await Roadmap.findOne({ userId, course, totalTime: time });
       if (!roadmap) {
         return res.status(404).json({ message: "Roadmap not found" });
       }

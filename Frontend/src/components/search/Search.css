@@ -1,142 +1,186 @@
-.search-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    color: #2e2e2e;
-    text-align: center;
-    padding: 0;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+/* Container */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a1316, #1a1f22, #10181b);
+  color: #ffffff;
+  text-align: center;
+  padding: 20px;
 }
 
-.search-container h1{
-    margin-top: -80px;
+/* Greeting */
+.search-container h1 {
+  margin-top: -60px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #e0f7fa;
 }
 
-.title{
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: #333;
-    margin-top: -10px;
+.title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #80deea;
+  margin-top: 10px;
 }
 
-.search-box{
-    display: flex;
-    align-items: center;
-    background-color: #ffffff;
-    border: 2px solid #ccc;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    padding: 9px 16px;
-    width: 80%;
-    max-width: 500px;
-    margin-bottom: 20px;
+/* Input box */
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: #131c20;
+  border: 1px solid #2c3e50;
+  border-radius: 12px;
+  padding: 10px 16px;
+  width: 80%;
+  max-width: 500px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 188, 212, 0.1);
+  transition: border 0.3s, box-shadow 0.3s;
+  backdrop-filter: blur(8px);
 }
 
-.search-box .icon{
-    font-size: 35px;
-    margin-right: 12px;
-    color: #5c6bc0;
+.search-box:focus-within {
+  border: 1px solid #00bcd4;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.2);
 }
 
-.search-box input{
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-size: 22px;
-    color: #333;
-    font-weight: 500;
+.search-box .icon {
+  font-size: 24px;
+  margin-right: 12px;
+  color: #00bcd4;
+}
+
+.search-box input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  color: #e0f7fa;
+  font-weight: 500;
 }
 
 .search-box input::placeholder {
-    color: #aaa;
-    font-size: 22px;
+  color: #7f9aa1;
+  font-size: 16px;
+  font-weight: 400;
 }
 
-/* New container for search input and button */
+/* Course + Time + Button */
 .search-input-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    width: 80%;
-    max-width: 500px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 80%;
+  max-width: 500px;
 }
 
 .search-input-container .search-box {
-    margin-bottom: 0;
-    flex: 1;
+  margin-bottom: 0;
+  flex: 1;
 }
 
+/* Search Button */
 .search-button {
-    background: linear-gradient(135deg, #26a69a, #00897b);
-    border: none;
-    cursor: pointer;
-    padding: 15px 20px;
-    border-radius: 12px;
-    font-size: 24px;
-    color: white;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    min-width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: linear-gradient(135deg, #00bcd4, #007c91);
+  border: 1px solid #00acc1;
+  cursor: pointer;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 24px;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 12px rgba(0, 188, 212, 0.3);
+  min-width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(135deg, #00897b, #26a69a);
+  background: linear-gradient(135deg, #0097a7, #00acc1);
+  box-shadow: 0 6px 16px rgba(0, 188, 212, 0.4);
 }
 
 .search-button:active {
-    transform: translateY(0);
+  transform: scale(0.98);
 }
 
 .search-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
+/* Loading / Error Text */
 .loading {
-    color: #26a69a;
-    font-weight: 500;
-    margin-top: 20px;
+  color: #4dd0e1;
+  font-weight: 500;
+  margin-top: 20px;
+  font-size: 16px;
 }
 
 .error {
-    color: #e01010;
-    font-weight: 500;
-    margin-top: 20px;
-    padding: 10px;
-    background-color: rgba(224, 16, 16, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba(224, 16, 16, 0.3);
+  color: #ff8a80;
+  font-weight: 500;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: rgba(255, 82, 82, 0.1);
+  border: 1px solid #ff5252;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
 }
 
-/* .logout-butt{
-    background: #0c0c0c;
-    color: white;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-} */
+/* Popular Paths */
+.popular-paths-container {
+  margin-top: 30px;
+  width: 80%;
+  max-width: 500px;
+}
 
-/* .logout-butt:hover{
-    background: #e01010;
-    color: white;
-} */
+.popular-paths-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #80deea;
+}
 
+.popular-paths {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.path-button {
+  background-color: #162028;
+  border: 1px solid #2a3f4d;
+  border-radius: 10px;
+  padding: 10px 18px;
+  color: #cde7f0;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0, 188, 212, 0.1);
+}
+
+.path-button:hover {
+  background-color: #1f2e39;
+  border-color: #00bcd4;
+}
+
+.path-button:active {
+  transform: scale(0.98);
+}
+
+/* Responsive */
 @media (max-width: 600px) {
   .search-box {
     flex-direction: column;
@@ -144,11 +188,7 @@
   }
 
   .search-box input {
-    font-size: 22px;
-  }
-
-  .search-box input::placeholder {
-    font-size: 20px;
+    font-size: 16px;
   }
 
   .search-input-container {
@@ -163,8 +203,10 @@
     padding: 12px;
   }
 
-  /* .logout-butt {
-    position: static;
-    margin-top: 20px;
-  } */
+  .path-button {
+    width: 48%;
+    padding: 8px 12px;
+    font-size: 14px;
+    text-align: center;
+  }
 }
